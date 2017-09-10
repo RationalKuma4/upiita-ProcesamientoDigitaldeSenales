@@ -213,13 +213,29 @@ axis([-1 7 -6 5]);
 % set(gca,'xtick',-2:7,'ytick',-2:4,'LineWidth',1,'FontSize',8);
 
 % %h
-% x=[2, 3, 5, 7];
-% nx=-2:1;
-% h=[1, 2, 3, 4];
-% nh=-1:2;
-% 
-% %i
-% x=[2, 3, 5, 7];
-% nx=-2:1;
-% h=[1, 2, 3, 4];
-% nh=-1:2;
+x=[1,1,2];
+nx=0:2;
+
+h=[1,1,1];
+nh=0:2;
+
+[y, ny] = ConvolucionDiscreta(x, nx, h, nh, 1);
+
+figure('Color','w');
+subplot(3, 1, 1);
+stem(nx, x);
+title('x(n)')
+axis([-1 3 0 3]);
+set(gca,'xtick',-1:3,'ytick',0:3,'LineWidth',1,'FontSize',8);
+
+subplot(3, 1, 2);
+stem(nh, h);
+title('h(n)');
+axis([-1 5 0 2]);
+set(gca,'xtick',-1:5,'ytick',0:2,'LineWidth',1,'FontSize',8);
+
+subplot(3, 1, 3);
+stem(ny, y);
+title('x(n)h(n-k)');
+axis([-1 5 0 5]);
+set(gca,'xtick',-1:5,'ytick',0:5,'LineWidth',1,'FontSize',8);
