@@ -26,7 +26,6 @@ b_0=0.866;
 % y(n)=-a_1*y(n-1)-a_2*y(n-2)+b_0*x(n);
 
 %% Inciso a
-% a) Condicinoes iniciales
 y=[0, 0];
 x=[0,0,1 zeros(1, 49)];
 
@@ -49,7 +48,6 @@ title('y(n)')
 yr=y;
 
 %% Inciso b
-% b) Condiciones iniciales
 y=[0,0];
 x=[0,0];
 
@@ -72,7 +70,6 @@ title('y(n)');
 axis([-3 100 0 2]);
 
 %% Inciso c
-% c)
 n=-2:49;
 h_FIR = yr.*(n>=0 & n<=19);
 nhFir=0:51;
