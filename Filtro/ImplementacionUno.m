@@ -4,7 +4,7 @@
 clear all;
 close all;
 
-%% Graficar las señales analogicas m(t) y c(t) en tiempo continuo
+%% Modulacion Graficar las señales analogicas m(t) y c(t) en tiempo continuo
 % Funciones continuas
 Tm=800;
 fm=1/Tm;
@@ -60,11 +60,49 @@ M=fft(m);
 C=fft(m);
 figure(3);
 subplot(2,1,1);
-stem(n, m);
+stem(n, abs(M));
 subplot(2,1,2);
-stem(n, c);
+stem(n, abs(M));
 
+%% Obtener la señal modulada y(n)=m(n)c(n) y graficarla en tiempo discreto
+y=m.*c;
+figure(4);
+stem(n, y);
 
+%% Calcular la tranformada de y(t) usando las muestras y(n) y graficar el espectro de magtnitud
+% Mostrar en el eje horizontal las frecuancias reales de las señales en Hz
+Y=fft(y);
+figure(5);
+stem(n, abs(Y));
+
+%% Demodulacion Obtener la señal r(n)=y(n)c(n) y graficar en tiempo discreto
+r=y.*c;
+figure(6);
+stem(n, r);
+
+%% Graficar el espectro de magnitud de r(n)
+figure(7);
+stem(n, abs(y));
+
+%% Eliminar las bandas laetrales de r(n) mediante un filtro FIR simetrico con
+% M=100, obteniendo la señal m2(n)
+M=100;
+A=Akn(M);
+Hr=[ones(1,9) zeros(1,41)];
+h=inv(A).*Hr';
+
+w=-pi:0.01:pi;
+Hw=h((M-1)/2+1);
+for n=0:(M-3)/2
+    Hw=Hw+2*h(n+1)*cos(((M-1)/2-n)*w);
+end
+
+plot(w, abs(Hw));
+plot(w, 20*log10(abs(Hw)));
+grid on
+axis([-pi pi -80 10])
+
+%% Graficar la señal m2(n) y su espectro de magnitud
 
 
 
