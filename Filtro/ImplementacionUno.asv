@@ -82,10 +82,8 @@ title('Señal demodulada r(n)=y(n)c(n)')
 grid on;
 
 %% Graficar el espectro de magnitud de r(n)
-% Tranformada de r
-R=fftshift(fft(r));
 figure(7);
-stem(f, abs(R));
+stem(f, abs(r));
 % axis([-100 100 -5 9])
 title('Espectro de magnitud de r(n)')
 grid on;
@@ -98,28 +96,19 @@ Hr=[ones(1,9) zeros(1,41)];
 h=inv(A)*Hr';
 
 w=-pi:0.01:pi;
-Hw=h((M/2)-1);    %Simetrico =/ Hw=h((M-1)/2+1);
+Hw=h((M-1)/2+1);    %Simetrico
 for n=0:(M-3)/2
     Hw=Hw+2*h(n+1)*cos(((M-1)/2-n)*w);
 end
 
-figure(7);
 plot(w, abs(Hw));
-grid on;
-figure(8);
 plot(w, 20*log10(abs(Hw)));
-grid on;
-axis([-pi pi -80 10]);
-m2=conv(h,r);
+grid on
+axis([-pi pi -80 10])
 
 %% Graficar la señal m2(n) y su espectro de magnitud
-% Transformada de m2
-M2=fftshift(fft(m2));
 
-figure(9);
-stem(f, abs(M2));
-% title('Espectro de magnitud de r(n)')
-grid on;
+
 
 
 

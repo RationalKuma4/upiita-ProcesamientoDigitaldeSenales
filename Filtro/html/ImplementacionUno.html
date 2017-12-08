@@ -6,7 +6,7 @@
    <!--
 This HTML was auto-generated from MATLAB code.
 To make changes, update the MATLAB code and republish this document.
-      --><title>ImplementacionUno</title><meta name="generator" content="MATLAB 9.0"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2017-12-05"><meta name="DC.source" content="ImplementacionUno.m"><style type="text/css">
+      --><title>ImplementacionUno</title><meta name="generator" content="MATLAB 9.0"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2017-12-07"><meta name="DC.source" content="ImplementacionUno.m"><style type="text/css">
 html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
 
 html { min-height:100%; margin-bottom:1px; }
@@ -66,54 +66,185 @@ table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px soli
 
 
 
-  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#2">Graficar las se&ntilde;ales analogicas m(t) y c(t) en tiempo continuo</a></li></ul></div><pre class="codeinput"><span class="comment">% Aplicacion de filtros FIR de fase lineal en la Toria de Comunicaciones</span>
-<span class="comment">% Simular un sistema de modulacion DSB-SC (doble banda lateral con</span>
-<span class="comment">% portadora suprimida), utilizando la se&ntilde;al moduladora m(t) y portadorac(t)</span>
-clear <span class="string">all</span>;
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#1">Aplicacion de filtros FIR de fase lineal en la Toria de Comunicaciones</a></li><li><a href="#2">Modulacion Graficar las se&ntilde;ales analogicas m(t) y c(t) en tiempo continuo</a></li><li><a href="#3">Muestrear las se&ntilde;ales analogicas m(t) y c(t) utilizando la frecuencia de muestreo fs=9000Hz</a></li><li><a href="#4">Graficar las se&ntilde;ales m(n) y c(n) en tiempo discreto</a></li><li><a href="#5">Calcular la tranformada de Fourier de m(t) y c(t) utilizando las muestras</a></li><li><a href="#6">Obtener la se&ntilde;al modulada y(n)=m(n)c(n) y graficarla en tiempo discreto</a></li><li><a href="#7">Calcular la tranformada de y(t) usando las muestras y(n) y graficar el espectro de magtnitud</a></li><li><a href="#8">Demodulacion Obtener la se&ntilde;al r(n)=y(n)c(n) y graficar en tiempo discreto</a></li><li><a href="#9">Graficar el espectro de magnitud de r(n)</a></li><li><a href="#10">Eliminar las bandas laetrales de r(n) mediante un filtro FIR simetrico con</a></li><li><a href="#11">Graficar la se&ntilde;al m2(n) y su espectro de magnitud</a></li></ul></div><h2>Aplicacion de filtros FIR de fase lineal en la Toria de Comunicaciones<a name="1"></a></h2><p>Simular un sistema de modulacion DSB-SC (doble banda lateral con portadora suprimida), utilizando la se&ntilde;al moduladora m(t) y portadorac(t)</p><pre class="codeinput">clear <span class="string">all</span>;
 close <span class="string">all</span>;
-
-<span class="comment">% Frecuencia y Periodo de Muestreo</span>
-fs=9000;
+</pre><h2>Modulacion Graficar las se&ntilde;ales analogicas m(t) y c(t) en tiempo continuo<a name="2"></a></h2><p>Funciones continuas</p><h2>Muestrear las se&ntilde;ales analogicas m(t) y c(t) utilizando la frecuencia de muestreo fs=9000Hz<a name="3"></a></h2><p>Frecuencia y Periodo de Muestreo</p><pre class="codeinput">fs=9000;
 Ts=1/fs;
+n=-100:100;
 
-<span class="comment">% Omegas y funcion m</span>
-w0=2*pi*200*Ts;
-w1=2*pi*400*Ts;
-w2=2*pi*800*Ts;
-mt=@(t) 5*cos(w0*t)+2*cos(w1*t)+cos(w2*t);
+<span class="comment">% Omegas y funcion m. w=2*pi*f</span>
+w0=2*pi*100*Ts;
+w1=2*pi*200*Ts;
+w2=2*pi*400*Ts;
+mn=5*cos(w0*n)+2*cos(w1*n)+cos(w2*n);
 
 <span class="comment">% Omega y funcion c</span>
-w3=2*pi*3600*Ts;
-ct=@(t) cos(w3*t);
-</pre><h2>Graficar las se&ntilde;ales analogicas m(t) y c(t) en tiempo continuo<a name="2"></a></h2><pre class="codeinput">t=-100:1:100;
-figure();
-plot(t, mt(t));
-</pre><img vspace="5" hspace="5" src="ImplementacionUno_01.png" alt=""> <p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2016a</a><br></p></div><!--
+w3=2*pi*1800*Ts;
+cn=cos(w3*n);
+</pre><h2>Graficar las se&ntilde;ales m(n) y c(n) en tiempo discreto<a name="4"></a></h2><p>Grafica</p><pre class="codeinput">figure(2);
+subplot(2,1,1);
+stem(n, mn);
+axis([-100 100 -6 9])
+title(<span class="string">'m(n)'</span>)
+grid <span class="string">on</span>;
+subplot(2,1,2);
+stem(n, cn);
+axis([-100 100 -1 1.2])
+title(<span class="string">'c(t)'</span>)
+grid <span class="string">on</span>;
+</pre><img vspace="5" hspace="5" src="ImplementacionUno_01.png" alt=""> <h2>Calcular la tranformada de Fourier de m(t) y c(t) utilizando las muestras<a name="5"></a></h2><p>obtenidas m(n) y c(n) y graficar los espectros de magnitud(espectros continuos) Mostrar en el eje horizontal la frecuencias reales de las se&ntilde;ales en Hz Tranformada para m y centramos</p><pre class="codeinput">M=fftshift(fft(mn));
+
+<span class="comment">% Tranformada de c y centramos</span>
+C=fftshift(fft(cn));
+
+<span class="comment">% Graficas</span>
+f=linspace(-fs/2,fs/2,201);    <span class="comment">%Frecuencia real</span>
+figure(3);
+subplot(2,1,1);
+stem(f, abs(M));
+<span class="comment">%axis([-1800 1800 0 600])</span>
+title(<span class="string">'Espectro de magnitud de m(n)'</span>)
+grid <span class="string">on</span>;
+subplot(2,1,2);
+stem(f, abs(C));
+<span class="comment">%axis([-3800 3800 0 100])</span>
+title(<span class="string">'Espectro de magnitud de c(n)'</span>)
+grid <span class="string">on</span>;
+</pre><img vspace="5" hspace="5" src="ImplementacionUno_02.png" alt=""> <h2>Obtener la se&ntilde;al modulada y(n)=m(n)c(n) y graficarla en tiempo discreto<a name="6"></a></h2><pre class="codeinput">y=mn.*cn;
+figure(4);
+stem(f, y);
+title(<span class="string">'Se&ntilde;al modulada y(n)=m(n)c(n)'</span>)
+grid <span class="string">on</span>;
+</pre><img vspace="5" hspace="5" src="ImplementacionUno_03.png" alt=""> <h2>Calcular la tranformada de y(t) usando las muestras y(n) y graficar el espectro de magtnitud<a name="7"></a></h2><p>Mostrar en el eje horizontal las frecuancias reales de las se&ntilde;ales en Hz</p><pre class="codeinput">Y=fft(y);
+figure(5);
+stem(f, abs(Y));
+</pre><img vspace="5" hspace="5" src="ImplementacionUno_04.png" alt=""> <h2>Demodulacion Obtener la se&ntilde;al r(n)=y(n)c(n) y graficar en tiempo discreto<a name="8"></a></h2><pre class="codeinput">r=y.*cn;
+figure(6);
+stem(n, r);
+axis([-100 100 -5 9])
+title(<span class="string">'Se&ntilde;al demodulada r(n)=y(n)c(n)'</span>)
+grid <span class="string">on</span>;
+</pre><img vspace="5" hspace="5" src="ImplementacionUno_05.png" alt=""> <h2>Graficar el espectro de magnitud de r(n)<a name="9"></a></h2><pre class="codeinput">figure(7);
+stem(f, abs(r));
+<span class="comment">% axis([-100 100 -5 9])</span>
+title(<span class="string">'Espectro de magnitud de r(n)'</span>)
+grid <span class="string">on</span>;
+</pre><img vspace="5" hspace="5" src="ImplementacionUno_06.png" alt=""> <h2>Eliminar las bandas laetrales de r(n) mediante un filtro FIR simetrico con<a name="10"></a></h2><p>M=100, obteniendo la se&ntilde;al m2(n) M=100; A=Ank(M); Hr=[ones(1,9) zeros(1,41)]; h=inv(A).*Hr';</p><p>w=-pi:0.01:pi; Hw=h((M-1)/2+1); for n=0:(M-3)/2     Hw=Hw+2*h(n+1)*cos(((M-1)/2-n)*w); end</p><p>plot(w, abs(Hw)); plot(w, 20*log10(abs(Hw))); grid on axis([-pi pi -80 10])</p><h2>Graficar la se&ntilde;al m2(n) y su espectro de magnitud<a name="11"></a></h2><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2016a</a><br></p></div><!--
 ##### SOURCE BEGIN #####
-% Aplicacion de filtros FIR de fase lineal en la Toria de Comunicaciones
+%% Aplicacion de filtros FIR de fase lineal en la Toria de Comunicaciones
 % Simular un sistema de modulacion DSB-SC (doble banda lateral con
 % portadora suprimida), utilizando la señal moduladora m(t) y portadorac(t)
 clear all;
 close all;
 
+%% Modulacion Graficar las señales analogicas m(t) y c(t) en tiempo continuo
+% Funciones continuas
+
+%% Muestrear las señales analogicas m(t) y c(t) utilizando la frecuencia de muestreo fs=9000Hz 
 % Frecuencia y Periodo de Muestreo
 fs=9000;
 Ts=1/fs;
+n=-100:100;
 
-% Omegas y funcion m
-w0=2*pi*200*Ts;
-w1=2*pi*400*Ts;
-w2=2*pi*800*Ts;
-mt=@(t) 5*cos(w0*t)+2*cos(w1*t)+cos(w2*t);
+% Omegas y funcion m. w=2*pi*f
+w0=2*pi*100*Ts;
+w1=2*pi*200*Ts;
+w2=2*pi*400*Ts;
+mn=5*cos(w0*n)+2*cos(w1*n)+cos(w2*n);
 
 % Omega y funcion c
-w3=2*pi*3600*Ts;
-ct=@(t) cos(w3*t);
+w3=2*pi*1800*Ts;
+cn=cos(w3*n);
 
-%% Graficar las señales analogicas m(t) y c(t) en tiempo continuo
-t=-100:1:100;
-figure();
-plot(t, mt(t));
+%% Graficar las señales m(n) y c(n) en tiempo discreto
+% Grafica
+figure(2);
+subplot(2,1,1);
+stem(n, mn);
+axis([-100 100 -6 9])
+title('m(n)')
+grid on;
+subplot(2,1,2);
+stem(n, cn);
+axis([-100 100 -1 1.2])
+title('c(t)')
+grid on;
+
+%% Calcular la tranformada de Fourier de m(t) y c(t) utilizando las muestras 
+% obtenidas m(n) y c(n) y graficar los espectros de magnitud(espectros continuos)
+% Mostrar en el eje horizontal la frecuencias reales de las señales en Hz
+% Tranformada para m y centramos
+M=fftshift(fft(mn));
+
+% Tranformada de c y centramos
+C=fftshift(fft(cn));
+
+% Graficas
+f=linspace(-fs/2,fs/2,201);    %Frecuencia real
+figure(3);
+subplot(2,1,1);
+stem(f, abs(M));
+%axis([-1800 1800 0 600])
+title('Espectro de magnitud de m(n)')
+grid on;
+subplot(2,1,2);
+stem(f, abs(C));
+%axis([-3800 3800 0 100])
+title('Espectro de magnitud de c(n)')
+grid on;
+
+%% Obtener la señal modulada y(n)=m(n)c(n) y graficarla en tiempo discreto
+y=mn.*cn;
+figure(4);
+stem(f, y);
+title('Señal modulada y(n)=m(n)c(n)')
+grid on;
+
+%% Calcular la tranformada de y(t) usando las muestras y(n) y graficar el espectro de magtnitud
+% Mostrar en el eje horizontal las frecuancias reales de las señales en Hz
+Y=fft(y);
+figure(5);
+stem(f, abs(Y));
+
+%% Demodulacion Obtener la señal r(n)=y(n)c(n) y graficar en tiempo discreto
+r=y.*cn;
+figure(6);
+stem(n, r);
+axis([-100 100 -5 9])
+title('Señal demodulada r(n)=y(n)c(n)')
+grid on;
+
+%% Graficar el espectro de magnitud de r(n)
+figure(7);
+stem(f, abs(r));
+% axis([-100 100 -5 9])
+title('Espectro de magnitud de r(n)')
+grid on;
+
+%% Eliminar las bandas laetrales de r(n) mediante un filtro FIR simetrico con
+% M=100, obteniendo la señal m2(n)
+% M=100;
+% A=Ank(M);
+% Hr=[ones(1,9) zeros(1,41)];
+% h=inv(A).*Hr';
+% 
+% w=-pi:0.01:pi;
+% Hw=h((M-1)/2+1);
+% for n=0:(M-3)/2
+%     Hw=Hw+2*h(n+1)*cos(((M-1)/2-n)*w);
+% end
+% 
+% plot(w, abs(Hw));
+% plot(w, 20*log10(abs(Hw)));
+% grid on
+% axis([-pi pi -80 10])
+
+%% Graficar la señal m2(n) y su espectro de magnitud
+
+
+
+
+
 
 ##### SOURCE END #####
 --></body></html>

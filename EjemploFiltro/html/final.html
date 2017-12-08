@@ -1,0 +1,427 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>final</title><meta name="generator" content="MATLAB 9.0"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2017-12-07"><meta name="DC.source" content="final.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#3">Antisimetrico</a></li></ul></div><pre class="codeinput">clear <span class="string">all</span>
+clc
+<span class="comment">%frecuencias</span>
+f1=100;
+f2=200;
+f3=300;
+<span class="comment">%frecuencia portadora</span>
+fc=800;
+<span class="comment">%frecuencia muestreo</span>
+fs=4000;
+<span class="comment">%periodo de muestreo</span>
+Ts=1/fs;
+m=0;
+<span class="comment">%w respectivas con su frecuencia y lo queremos pasar a discretas</span>
+w1=2*pi*(f1*Ts);
+w2=2*pi*(f2*Ts);
+w3=2*pi*(f3*Ts);
+w4=2*pi*(fc*Ts);
+<span class="comment">%intervalo de n</span>
+n=-100:1:100;
+
+<span class="comment">% 1)</span>
+m=5*cos(w1*n)+10*cos(w2*n)+2*cos(w3*n);
+
+<span class="comment">% 2)</span>
+c=cos(w4*n);
+
+<span class="comment">% 3)</span>
+M=fftshift(fft(m,1000));<span class="comment">% Se quiere ver el espectro con mas punto por eso el 1000</span>
+f=linspace(-fs/2,fs/2,1000);
+C=fftshift(fft(c,1000));
+
+<span class="comment">% 4)</span>
+s=m.*c; <span class="comment">%se&ntilde;al modulada</span>
+S=fftshift(fft(s,1000)); <span class="comment">%magnitud de s(n)</span>
+
+<span class="comment">% 5)</span>
+r=s.*c;
+R=fftshift(fft(r,1000));
+
+<span class="comment">%Graficas</span>
+
+figure(1)
+subplot(4,2,1); stem(n,m)
+title(<span class="string">'Se&ntilde;al m(n)'</span>); grid;
+subplot(4,2,3); stem(n,c)
+title(<span class="string">'Se&ntilde;al c(n)'</span>); grid;
+subplot(4,2,2); plot(f,abs(M)) <span class="comment">%magnitud de m(n)</span>
+title(<span class="string">'Espectro de potencia M(w)'</span>); grid;
+subplot(4,2,4); plot(f,abs(C)) <span class="comment">%magnitud de c(n)</span>
+title(<span class="string">'Espectro de potencia C(w)'</span>); grid;
+subplot(4,2,5); stem(n,s)
+title(<span class="string">'s(n)=m(n)*c(n)'</span>); grid;
+subplot(4,2,6); plot(f,abs(S))
+title(<span class="string">'Espectro de potencia S(w)'</span>); grid;
+subplot(4,2,7); stem(n,r)
+title(<span class="string">'r(n)=s(n)*c(n)'</span>); grid;
+subplot(4,2,8); plot(f,abs(R))
+title(<span class="string">'Espectro de potencia R(w)'</span>); grid;
+</pre><img vspace="5" hspace="5" src="final_01.png" alt=""> <pre class="codeinput"><span class="comment">%Aqui haremos las modulaciones  con el filtro Simetrico</span>
+
+<span class="comment">%6)</span>
+M1=100;
+H = [ones(1,9) zeros(1,41)]; <span class="comment">%coeficientes</span>
+A=ank(M1);  <span class="comment">%matriz</span>
+h=inv(A)*H';    <span class="comment">%multiplicamos transpuesta de A con H</span>
+h = [h;flipud(h)]; <span class="comment">%respuesta al impulso pasa bajas</span>
+w=-pi:0.001:pi;
+figure(2)
+subplot(2,1,1)
+stem(h)
+title(<span class="string">'Impulso'</span>); grid
+Hr=0;
+<span class="keyword">for</span> k=0:1:M1/2-1
+    Hr= Hr+2*h(k+1)*cos(((M1-1)/2-k)*w); <span class="comment">%se suman los cofecientes</span>
+<span class="keyword">end</span>
+subplot(2,1,2)
+plot(w*4000./(2*pi),20*log10(abs(Hr)))
+title(<span class="string">'Simetrico Par'</span>); grid
+
+figure(3)
+subplot(2,2,1); plot(f,abs(R))
+title(<span class="string">'Espetro de potencia R(w)'</span>); grid
+subplot(2,2,3); plot(w*4000./(2*pi),20*log10(abs(Hr)))
+title(<span class="string">'Filtro Simetrico Par'</span>); grid
+
+<span class="comment">%7)</span>
+m2=conv(h,r);
+nn=linspace(-100,100,length(m2));
+M2=fftshift(fft(m2));
+ff=linspace(-fs/2,fs/2,length(M2));
+
+figure(3)
+subplot(2,2,2); stem(nn,m2)
+title(<span class="string">'Convoluci&oacute;n m2=h*r'</span>); grid
+subplot(2,2,4); plot(ff,abs(M2))
+title(<span class="string">'Magnitud del espectro de la se&ntilde;al recuperada'</span>); grid
+
+<span class="comment">%8)</span>
+figure(4)
+
+n1=-149:150;
+c1=cos(w4*n1);
+M1=fftshift(fft(m2,1000));
+f=linspace(-fs/2,fs/2,1000);
+C1=fftshift(fft(c1,1000));
+s1=m2.*c1;
+S1=fftshift(fft(s1,1000));
+
+subplot(3,2,1); stem(n1,m2); title(<span class="string">'m2(n)'</span>); grid
+subplot(3,2,3); stem(n1,c1); title(<span class="string">'c1(n)'</span>); grid
+subplot(3,2,2); plot(f,abs(M1)); title(<span class="string">'Espectro M2(w)'</span>); grid
+subplot(3,2,4); plot(f,abs(C1)); title(<span class="string">'Espectro C1(w)'</span>); grid
+subplot(3,2,5); stem(n1,s1); title(<span class="string">'s1(n)'</span>); grid
+subplot(3,2,6); plot(f,abs(S1)); title(<span class="string">'Espectro S1(w)'</span>); grid
+</pre><img vspace="5" hspace="5" src="final_02.png" alt=""> <img vspace="5" hspace="5" src="final_03.png" alt=""> <img vspace="5" hspace="5" src="final_04.png" alt=""> <h2>Antisimetrico<a name="3"></a></h2><p>9)</p><pre class="codeinput">Mimpar=101;
+Him=[zeros(1,12) ones(1,8) zeros(1,30)]; <span class="comment">%coeficientes</span>
+B=bnk(Mimpar); <span class="comment">%se resuelve sist ecuaciones</span>
+h2=inv(B)*Him'; <span class="comment">%multiplicamos transpuesta de B con Him</span>
+h2=[h2;0;-flipud(h2(1:((Mimpar-3)./2)+1))]; <span class="comment">%respuesta al impuslo pasa bandas</span>
+figure(5)
+subplot(2,1,1); stem(h2)
+title(<span class="string">'Impulso'</span>);grid
+Hr2=0;
+ <span class="keyword">for</span> j=0:1:(Mimpar-3)/2
+   Hr2=Hr2+2*h2(j+1)*sin(((Mimpar-1)/2-j).*w);
+ <span class="keyword">end</span>
+subplot(2,1,2); plot(w.*4000./(2*pi),20*log10(abs(Hr2)))<span class="comment">%normalizar</span>
+title(<span class="string">'Antisimetrico Impar'</span>); axis([-2000 2000 -100 10]); grid
+
+<span class="comment">%prueba Aqui se analiza la forma de que debe de ir el vector Him, cada</span>
+<span class="comment">%lobulo significa un cero y queremos que los unos que es la parte</span>
+<span class="comment">%horizontal este entre 500 y ochocientos por eso esta el vector deifinido</span>
+<span class="comment">%de esa forma y aqui se puede comprobar</span>
+
+figure(6)
+subplot(2,2,1); plot(f,abs(S)); title(<span class="string">'Espectro de frecuencia S(w)'</span>); grid
+subplot(2,2,3); plot(w.*4000./(2*pi),20*log10(abs(Hr2)))<span class="comment">%normalizar</span>
+title(<span class="string">'Filtro Antisimetrico Impar'</span>); grid
+
+<span class="comment">% 10)</span>
+s2=conv(h2,s);
+s2=s2(50:250);
+S2=fftshift(fft(s2, 1000));
+fff=linspace(-fs/2,fs/2,length(S2));
+
+subplot(2,2,2); stem(n,s2)
+title(<span class="string">'Convoluci&oacute;n s2=s(n)*h2(n)'</span>); grid
+subplot(2,2,4); plot(fff,abs(S2))
+title(<span class="string">'Magnitud del espectro de la se&ntilde;al recuperada'</span>);grid
+</pre><pre class="codeoutput">Valor Impar
+</pre><img vspace="5" hspace="5" src="final_05.png" alt=""> <img vspace="5" hspace="5" src="final_06.png" alt=""> <p>11)</p><pre class="codeinput"><span class="comment">%aqui se repite el paso 5</span>
+r2=s2.*c;
+R2=fftshift(fft(r2,1000));
+
+figure(7)
+subplot(2,1,1); stem(n,r2);
+title(<span class="string">'r2=s2*c2'</span>); grid
+subplot(2,1,2); plot(f,abs(R2));
+title(<span class="string">'Espectro R(w)'</span>); grid
+
+<span class="comment">%aqui se repite el paso 6</span>
+
+figure(8)
+subplot(2,1,1); stem(h); title(<span class="string">'Impulso'</span>)
+subplot(2,1,2); plot(w*4000./(2*pi),20*log10(abs(Hr))); title(<span class="string">'Simetrico par'</span>)
+<span class="comment">%aqui se repite el paso 7</span>
+m3=conv(h,r2);
+n2=linspace(-100,100,length(m3));
+M3=fftshift(fft(m3, 1000));
+fff=linspace(-fs/2,fs/2,length(M3));
+
+figure(9)
+subplot(2,1,1); stem(n2,m3); title(<span class="string">'Convoluci&oacute;n m3=h*r'</span>); grid
+subplot(2,1,2); plot(fff,abs(M3)); title(<span class="string">'Magnitud del espectro de la se&ntilde;al recuperada'</span>);grid
+</pre><img vspace="5" hspace="5" src="final_07.png" alt=""> <img vspace="5" hspace="5" src="final_08.png" alt=""> <img vspace="5" hspace="5" src="final_09.png" alt=""> <p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2016a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+clear all
+clc
+%frecuencias 
+f1=100;
+f2=200;
+f3=300;
+%frecuencia portadora
+fc=800;
+%frecuencia muestreo
+fs=4000;
+%periodo de muestreo
+Ts=1/fs;
+m=0;
+%w respectivas con su frecuencia y lo queremos pasar a discretas
+w1=2*pi*(f1*Ts);
+w2=2*pi*(f2*Ts);
+w3=2*pi*(f3*Ts);
+w4=2*pi*(fc*Ts);
+%intervalo de n
+n=-100:1:100;
+
+% 1)
+m=5*cos(w1*n)+10*cos(w2*n)+2*cos(w3*n);
+
+% 2)
+c=cos(w4*n);
+
+% 3)
+M=fftshift(fft(m,1000));% Se quiere ver el espectro con mas punto por eso el 1000
+f=linspace(-fs/2,fs/2,1000);
+C=fftshift(fft(c,1000));
+
+% 4)
+s=m.*c; %señal modulada
+S=fftshift(fft(s,1000)); %magnitud de s(n)
+
+% 5)
+r=s.*c;
+R=fftshift(fft(r,1000));
+
+%Graficas
+
+figure(1)
+subplot(4,2,1); stem(n,m)
+title('Señal m(n)'); grid;
+subplot(4,2,3); stem(n,c)
+title('Señal c(n)'); grid;
+subplot(4,2,2); plot(f,abs(M)) %magnitud de m(n)
+title('Espectro de potencia M(w)'); grid;
+subplot(4,2,4); plot(f,abs(C)) %magnitud de c(n)
+title('Espectro de potencia C(w)'); grid;
+subplot(4,2,5); stem(n,s)
+title('s(n)=m(n)*c(n)'); grid;
+subplot(4,2,6); plot(f,abs(S))
+title('Espectro de potencia S(w)'); grid;
+subplot(4,2,7); stem(n,r)
+title('r(n)=s(n)*c(n)'); grid;
+subplot(4,2,8); plot(f,abs(R))
+title('Espectro de potencia R(w)'); grid;
+
+%%
+%Aqui haremos las modulaciones  con el filtro Simetrico
+
+%6)
+M1=100;
+H = [ones(1,9) zeros(1,41)]; %coeficientes 
+A=ank(M1);  %matriz
+h=inv(A)*H';    %multiplicamos transpuesta de A con H
+h = [h;flipud(h)]; %respuesta al impulso pasa bajas
+w=-pi:0.001:pi;
+figure(2)
+subplot(2,1,1)
+stem(h)
+title('Impulso'); grid
+Hr=0;
+for k=0:1:M1/2-1
+    Hr= Hr+2*h(k+1)*cos(((M1-1)/2-k)*w); %se suman los cofecientes
+end
+subplot(2,1,2)
+plot(w*4000./(2*pi),20*log10(abs(Hr)))
+title('Simetrico Par'); grid
+
+figure(3)
+subplot(2,2,1); plot(f,abs(R))
+title('Espetro de potencia R(w)'); grid
+subplot(2,2,3); plot(w*4000./(2*pi),20*log10(abs(Hr)))
+title('Filtro Simetrico Par'); grid
+
+%7)
+m2=conv(h,r);
+nn=linspace(-100,100,length(m2));
+M2=fftshift(fft(m2));
+ff=linspace(-fs/2,fs/2,length(M2));
+
+figure(3)
+subplot(2,2,2); stem(nn,m2)
+title('Convolución m2=h*r'); grid
+subplot(2,2,4); plot(ff,abs(M2))
+title('Magnitud del espectro de la señal recuperada'); grid
+
+%8)
+figure(4)
+
+n1=-149:150;
+c1=cos(w4*n1);
+M1=fftshift(fft(m2,1000));
+f=linspace(-fs/2,fs/2,1000);
+C1=fftshift(fft(c1,1000));
+s1=m2.*c1;
+S1=fftshift(fft(s1,1000));
+
+subplot(3,2,1); stem(n1,m2); title('m2(n)'); grid
+subplot(3,2,3); stem(n1,c1); title('c1(n)'); grid
+subplot(3,2,2); plot(f,abs(M1)); title('Espectro M2(w)'); grid
+subplot(3,2,4); plot(f,abs(C1)); title('Espectro C1(w)'); grid
+subplot(3,2,5); stem(n1,s1); title('s1(n)'); grid
+subplot(3,2,6); plot(f,abs(S1)); title('Espectro S1(w)'); grid
+%% Antisimetrico
+% 9)
+Mimpar=101;
+Him=[zeros(1,12) ones(1,8) zeros(1,30)]; %coeficientes
+B=bnk(Mimpar); %se resuelve sist ecuaciones
+h2=inv(B)*Him'; %multiplicamos transpuesta de B con Him
+h2=[h2;0;-flipud(h2(1:((Mimpar-3)./2)+1))]; %respuesta al impuslo pasa bandas
+figure(5)
+subplot(2,1,1); stem(h2)
+title('Impulso');grid
+Hr2=0;
+ for j=0:1:(Mimpar-3)/2
+   Hr2=Hr2+2*h2(j+1)*sin(((Mimpar-1)/2-j).*w);
+ end
+subplot(2,1,2); plot(w.*4000./(2*pi),20*log10(abs(Hr2)))%normalizar
+title('Antisimetrico Impar'); axis([-2000 2000 -100 10]); grid
+ 
+%prueba Aqui se analiza la forma de que debe de ir el vector Him, cada
+%lobulo significa un cero y queremos que los unos que es la parte
+%horizontal este entre 500 y ochocientos por eso esta el vector deifinido
+%de esa forma y aqui se puede comprobar
+
+figure(6)
+subplot(2,2,1); plot(f,abs(S)); title('Espectro de frecuencia S(w)'); grid
+subplot(2,2,3); plot(w.*4000./(2*pi),20*log10(abs(Hr2)))%normalizar
+title('Filtro Antisimetrico Impar'); grid
+ 
+% 10)
+s2=conv(h2,s);
+s2=s2(50:250);
+S2=fftshift(fft(s2, 1000));
+fff=linspace(-fs/2,fs/2,length(S2));
+
+subplot(2,2,2); stem(n,s2)
+title('Convolución s2=s(n)*h2(n)'); grid
+subplot(2,2,4); plot(fff,abs(S2))
+title('Magnitud del espectro de la señal recuperada');grid
+%%
+% 11)
+%aqui se repite el paso 5
+r2=s2.*c;
+R2=fftshift(fft(r2,1000));
+
+figure(7)
+subplot(2,1,1); stem(n,r2);
+title('r2=s2*c2'); grid
+subplot(2,1,2); plot(f,abs(R2));
+title('Espectro R(w)'); grid
+
+%aqui se repite el paso 6
+
+figure(8)
+subplot(2,1,1); stem(h); title('Impulso')
+subplot(2,1,2); plot(w*4000./(2*pi),20*log10(abs(Hr))); title('Simetrico par')
+%aqui se repite el paso 7
+m3=conv(h,r2);
+n2=linspace(-100,100,length(m3));
+M3=fftshift(fft(m3, 1000));
+fff=linspace(-fs/2,fs/2,length(M3));
+
+figure(9)
+subplot(2,1,1); stem(n2,m3); title('Convolución m3=h*r'); grid
+subplot(2,1,2); plot(fff,abs(M3)); title('Magnitud del espectro de la señal recuperada');grid
+##### SOURCE END #####
+--></body></html>
