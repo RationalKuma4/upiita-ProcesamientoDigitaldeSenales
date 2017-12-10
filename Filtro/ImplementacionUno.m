@@ -159,5 +159,3 @@ plot(f2,abs(M2));
 title('Espectro de magnitud M2(w)'); 
 grid on;
 
-
-
