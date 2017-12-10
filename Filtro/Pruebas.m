@@ -29,7 +29,7 @@ mt=@(t) 5*cos(2*pi*t*100)+2*cos(2*pi*fm*t*200)+cos(2*pi*fm*t*400);
 figure(1);
 plot(t, mt(t));
 axis([0 .05 -10 10]);
-
+grid on;
 % Tc=800;
 % fc=1/Tc;
 % ct=@(t) cos(2*pi*t*fc*1800);
