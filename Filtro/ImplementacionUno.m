@@ -138,7 +138,7 @@ title('Filtro Simetrico Par');
 axis([-1000 1000 -100 10])
 grid on;
 
-% Convolucion para eliminar las bandas
+% Convolucion
 m2=conv(h,r);
 
 %% Graficar la señal m2(n) y su espectro de magnitud 

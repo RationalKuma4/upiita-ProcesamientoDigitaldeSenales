@@ -1,4 +1,4 @@
-% Aplicacion de filtros FIR de fase lineal en la Toria de Comunicaciones
+%% Aplicacion de filtros FIR de fase lineal en la Toria de Comunicaciones
 % Simular un sistema de modulacion DSB-SC (doble banda lateral con
 % portadora suprimida), utilizando la señal moduladora m(t) y portadorac(t)
 clear all;
@@ -6,21 +6,25 @@ close all;
 
 %% Modulacion Graficar las señales analogicas m(t) y c(t) en tiempo continuo
 % Funciones continuas
-Tm=800;
-fm=1/Tm;
-mt=@(t) 5*cos(2*pi*fm*t*100)+2*cos(2*pi*fm*t*200)+cos(2*pi*fm*t*400);
+Fs = 9000;                   
+dt = 1/Fs;                   
+paso = 0.25;             
+t = (0:dt:paso-dt)';
 
-Tc=800;
-fc=1/Tc;
-ct=@(t) cos(2*pi*t*fc*1800);
+mt=@(t) 5*cos(2*pi*t*100)+2*cos(2*pi*t*200)+cos(2*pi*t*400);
+ct=@(t) cos(2*pi*t*1800);
 
-% Grafica
-t=-15:15;
 figure(1);
 subplot(2,1,1);
 plot(t, mt(t));
+title('m(t)')
+axis([0 .05 -5 10]);
+grid on;
 subplot(2,1,2);
 plot(t, ct(t));
+title('c(t)')
+axis([0 .005 -1 1.2]);
+grid on;
 
 %% Muestrear las señales analogicas m(t) y c(t) utilizando la frecuencia de muestreo fs=9000Hz 
 % Frecuencia y Periodo de Muestreo
@@ -28,75 +32,174 @@ fs=9000;
 Ts=1/fs;
 n=-100:100;
 
-% Omegas y funcion m
-w0=2*pi*200*Ts;
-w1=2*pi*400*Ts;
-w2=2*pi*800*Ts;
-m=5*cos(w0*n)+2*cos(w1*n)+cos(w2*n);
+% Omegas y funcion m. w=2*pi*f
+w0=2*pi*100*Ts;
+w1=2*pi*200*Ts;
+w2=2*pi*400*Ts;
+mn=5*cos(w0*n)+2*cos(w1*n)+cos(w2*n);
 
 % Omega y funcion c
-w3=2*pi*3600*Ts;
-c=cos(w3*n);
-
-% Grafica
-figure(2);
-subplot(2,1,1);
-plot(n, m);
-subplot(2,1,2);
-plot(n, c);
+w3=2*pi*1800*Ts;
+cn=cos(w3*n);
 
 %% Graficar las señales m(n) y c(n) en tiempo discreto
 % Grafica
-figure(3);
+figure(2);
 subplot(2,1,1);
-stem(n, m);
+stem(n, mn);
+axis([-100 100 -6 9])
+title('m(n)')
+grid on;
 subplot(2,1,2);
-stem(n, c);
+stem(n, cn);
+axis([-100 100 -1 1.2])
+title('c(t)')
+grid on;
 
 %% Calcular la tranformada de Fourier de m(t) y c(t) utilizando las muestras 
 % obtenidas m(n) y c(n) y graficar los espectros de magnitud(espectros continuos)
 % Mostrar en el eje horizontal la frecuencias reales de las señales en Hz
-M=fft(m);
-C=fft(m);
+% Tranformada para m y centramos
+M=fftshift(fft(mn,1000));
+
+% Tranformada de c y centramos
+C=fftshift(fft(cn,1000));
+
+% Graficas
+f=linspace(-fs/2,fs/2,1000);    %Frecuencia real
 figure(3);
 subplot(2,1,1);
-stem(n, abs(M));
+plot(f, abs(M));
+axis([-4500 4500 0 600])
+title('Espectro de magnitud de M(w)')
+grid on;
 subplot(2,1,2);
-stem(n, abs(M));
+plot(f, abs(C));
+axis([-4500 4500 0 110])
+title('Espectro de magnitud de C(w)')
+grid on;
 
-%% Modulacion Utilizando un filtro Fir de sale lineal antisimetrico con M=101
-% eliminar las bandas laterales superiores para obtener la señal yssb(n)
+%% Obtener la señal modulada y(n)=m(n)*c(n) y graficarla en tiempo discreto
+y=mn.*cn;
+figure(4);
+subplot(2,1,1);
+plot(n,y);
+title('Señal modulada y(t)=m(t)*c(t)')
+grid on;
+subplot(2,1,2);
+stem(n, y);
+title('Señal modulada y(n)=m(n)*c(n)')
+grid on;
+
+%% Calcular la tranformada de y(t) usando las muestras y(n) y graficar el espectro de magtnitud
+% Mostrar en el eje horizontal las frecuancias reales de las señales en Hz
+Y=fftshift(fft(y,1000));
+figure(5);
+plot(f, abs(Y));
+title('Espectro de Magnitud de Y(w)')
+axis([-4500 4500 0 290])
+grid on;
+
+%% Modulacion: Utilizar un nfiltro FIR de fase lineal antisimetrico con M=101, eliminar las bandas laterales
+% superiores para obtener la señal yssb(n)
+M=101;
+B=Bnk(M);   % Matriz
+Hr=[zeros(1,12) ones(1,8) zeros(1,30)]; % Coeficientes iniciales
+h=inv(B)*Hr';
+h=[h;0;-flipud(h(1:((M-3)/2)+1))]; %respuesta al impuslo pasa bandas
+w=-pi:0.001:pi;      % Omega
+
+Hw=0;
+for nn=0:(M-3)/2
+    Hw=Hw+2*h(nn+1)*sin(((M-1)/2-nn).*w);
+end
+
+figure(6) 
+plot(w.*4000./(2*pi),20*log10(abs(Hw)))
+title('Filtro Antisimetrico Impar'); 
+axis([-1500 1500 -100 5]); 
+grid on;
+
+% Convolucion para obetener yssb
+yssb=conv(h,y);
+yssb=yssb(50:250);
 
 %% Graficar yssb(n) y su espectro de magnitud
+YSSB=fftshift(fft(yssb,1000));
+f2=linspace(-fs/2,fs/2,length(YSSB));
 
-%% Demodulacion 
+figure(7)
+subplot(3,1,1); 
+stem(n,yssb);
+title('Convolucion yssb=y(n)*h(n)'); 
+grid on;
+subplot(3,1,2); 
+plot(n,yssb);
+title('Convolucion yssb=y(n)*h(n)'); 
+grid on;
+subplot(3,1,3); 
+plot(f2,abs(YSSB));
+title('Espectro de magnitud de YSSB(w)');
+grid on;
 
-%% Demodulacion Obtener la señal r(n)=y(n)c(n) y graficar en tiempo discreto
-r=y.*c;
+%% Democulacion Repetir g-j, utilizando yssb(n) en lugra de y(n). Obtener la señal r(n)=y(n)c(n) y graficar en tiempo discreto
+r=yssb.*cn;
 figure(6);
-stem(n, r);
+stem(n,r);
+axis([-100 100 -5 9])
+title('Señal demodulada r(n)=y(n)*c(n)')
+grid on;
 
 %% Graficar el espectro de magnitud de r(n)
+% Tranformada de r
+R=fftshift(fft(r,1000));
 figure(7);
-stem(n, abs(y));
+plot(f, abs(R));
+% axis([-100 100 -5 9])
+title('Espectro de magnitud de R(w)')
+grid on;
 
 %% Eliminar las bandas laetrales de r(n) mediante un filtro FIR simetrico con
 % M=100, obteniendo la señal m2(n)
 M=100;
-A=Akn(M);
-Hr=[ones(1,9) zeros(1,41)];
-h=inv(A).*Hr';
+A=Ank(M);           % Matriz de filtro
+Hr=[ones(1,9) zeros(1,41)]; % Coeficientes
+h=inv(A)*Hr';
+h=[h;flipud(h)];  % Respuesta al impulso para pasa bajas
+w=-pi:0.001:pi;      % Omega
 
-w=-pi:0.01:pi;
-Hw=h((M-1)/2+1);
-for n=0:(M-3)/2
-    Hw=Hw+2*h(n+1)*cos(((M-1)/2-n)*w);
+Hw=0;
+for n=0:M/2-1
+    Hw= Hw+2*h(n+1)*cos(((M-1)/2-n)*w); % Suma cofecientes
 end
 
-plot(w, abs(Hw));
-plot(w, 20*log10(abs(Hw)));
-grid on
-axis([-pi pi -80 10])
+% Grafica
+figure(8);
+plot(w*4000./(2*pi),20*log10(abs(Hw)))
+title('Filtro Simetrico Par'); 
+axis([-1000 1000 -100 10])
+grid on;
 
-%% Graficar la señal m2(n) y su espectro de magnitud
+% Convolucion
+m2=conv(h,r);
+
+%% Graficar la señal m2(n) y su espectro de magnitud 
+% Transformada de m2
+M2=fftshift(fft(m2));
+
+% Grafica
+n2=linspace(-100,100,length(m2));
+f2=linspace(-fs/2,fs/2,length(M2));
+
+figure(9);
+subplot(2,1,1);
+stem(n2,m2);
+title('m2'); 
+grid on;
+subplot(2,1,2);
+plot(f2,abs(M2));
+title('Espectro de magnitud M2(w)'); 
+grid on;
+
+
 
